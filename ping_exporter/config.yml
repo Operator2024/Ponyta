@@ -1,0 +1,22 @@
+targets:
+  - 8.8.8.8
+  - 8.8.4.4
+  - google.com
+  - vk.com
+  - metropolis-online.ru
+  - metropolistk.ru
+  - operator2018.ru
+  - selectel.ru
+
+dns:
+  refresh: 30s
+  nameserver: 9.9.9.9
+
+ping:
+  interval: 2s
+  timeout: 5s
+  history-size: 42
+  payload-size: 120
+
+options:
+  disableIPv6: true

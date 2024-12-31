@@ -1,0 +1,14 @@
+groups:
+  - name: Requests
+    rules:
+    - record: code:prometheus_http_requests_total:sum
+      expr: sum by (code) (prometheus_http_requests_total)
+  - name: RTT
+    rules:
+    - alert: HighWorstRTT
+      expr: job:ping_rtt_worst_seconds*1000 > 25
+      for: 2m
+      labels:
+        severity: minor
+      annotations:
+        summary: "High ICMP latency, last value: {{ $value }}"

@@ -1,0 +1,81 @@
+services:
+  prometheus:
+    image: prom/prometheus
+    container_name: prometheus
+    command:
+      - '--config.file=/etc/prometheus/prometheus.yml'
+      - '--web.config.file=/etc/prometheus/web.yml'
+      - '--web.enable-lifecycle'
+    ports:
+      - 172.18.0.1:9090:${PROM_PORT}
+    restart: unless-stopped
+    volumes:
+      - ./prometheus:/etc/prometheus
+      - prom_data:/prometheus
+    networks:
+      local-network:
+        ipv4_address: 172.18.0.254
+  ping_exporter:
+    image: czerwonk/ping_exporter
+    container_name: ping_exporter
+    ports:
+      - 172.18.0.1:9427:9427
+    restart: unless-stopped
+    volumes:
+      - ./ping_exporter:/config:ro
+    networks:
+      local-network:
+        ipv4_address: 172.18.0.2
+  node_exporter:
+    image: quay.io/prometheus/node-exporter:latest
+    container_name: node_exporter
+    command:
+      - '--path.rootfs=/host'
+      - '--collector.processes'
+    network_mode: host
+    pid: host
+    restart: unless-stopped
+    volumes:
+      - '/:/host:ro,rslave'
+  snmp_exporter:
+    # main branch pin to last image
+    image: quay.io/prometheus/snmp-exporter@sha256:08392fc5c93b0761fc4a6b09e51b7094c961e22d701f06f42adc51e5869fe888
+    container_name: snmp_exporter
+    command:
+      - '--config.file=/snmp.yml'
+      - '--config.expand-environment-variables'
+    ports:
+      -  172.18.0.1:9116:9116
+    restart: unless-stopped
+    volumes:
+      - ./snmp.yml:/snmp.yml
+    networks:
+      local-network:
+        ipv4_address: 172.18.0.4
+  grafana:
+    image: grafana/grafana
+    container_name: grafana
+    ports:
+      - 3000:3000
+    restart: unless-stopped
+    environment:
+      - PROM_PORT=${PROM_PORT}
+      - GF_SECURITY_ADMIN_USER=${GF_USER}
+      - GF_SECURITY_ADMIN_PASSWORD=${GF_SECRET}
+    volumes:
+      - ./grafana:/etc/grafana/provisioning/datasources
+      - 'grafana_storage:/var/lib/grafana'
+    networks:
+      local-network:
+        ipv4_address: 172.18.0.3
+volumes:
+  prom_data:
+  grafana_storage:
+
+networks:
+  local-network:
+    ipam:
+      driver: default
+      config:
+        - subnet: 172.18.0.0/24
+          gateway: 172.18.0.1
