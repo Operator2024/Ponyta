@@ -1,6 +1,6 @@
 services:
   prometheus:
-    image: prom/prometheus
+    image: prom/prometheus@sha256:565ee86501224ebbb98fc10b332fa54440b100469924003359edf49cbce374bd
     container_name: prometheus
     command:
       - '--config.file=/etc/prometheus/prometheus.yml'
@@ -16,7 +16,7 @@ services:
       local-network:
         ipv4_address: 172.18.0.254
   ping_exporter:
-    image: czerwonk/ping_exporter
+    image: czerwonk/ping_exporter@sha256:11592d365c3331db72fc7351ec980401e792d638f834593603fac5ee25a27495
     container_name: ping_exporter
     ports:
       - 172.18.0.1:9427:9427
@@ -27,7 +27,7 @@ services:
       local-network:
         ipv4_address: 172.18.0.2
   node_exporter:
-    image: quay.io/prometheus/node-exporter:latest
+    image: quay.io/prometheus/node-exporter@sha256:4032c6d5bfd752342c3e631c2f1de93ba6b86c41db6b167b9a35372c139e7706
     container_name: node_exporter
     command:
       - '--path.rootfs=/host'
@@ -53,7 +53,7 @@ services:
       local-network:
         ipv4_address: 172.18.0.4
   grafana:
-    image: grafana/grafana
+    image: grafana/grafana@sha256:8d938a1c52b018c60cb3583657e038054387aa18a74f09a865c99a522481f7ac
     container_name: grafana
     ports:
       - 3000:3000
