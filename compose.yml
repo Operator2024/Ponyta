@@ -62,6 +62,14 @@ services:
       - PROM_PORT=${PROM_PORT}
       - GF_SECURITY_ADMIN_USER=${GF_USER}
       - GF_SECURITY_ADMIN_PASSWORD=${GF_SECRET}
+      - GF_SMTP_ENABLED=true
+      - GF_SMTP_HOST=${SMTP_HOST}
+      - GF_SMTP_USER=${SMTP_USER}
+      - GF_SMTP_PASSWORD=${SMTP_PASSWORD}
+      - GF_SMTP_SKIP_VERIFY=false
+      - GF_SMTP_FROM_ADDRESS=${SMTP_FROM_ADDRESS}
+      - GF_SMTP_FROM_NAME=Grafana
+      - GF_SMTP_STARTTLS_POLICY=MandatoryStartTLS
     volumes:
       - ./grafana:/etc/grafana/provisioning/datasources
       - 'grafana_storage:/var/lib/grafana'
