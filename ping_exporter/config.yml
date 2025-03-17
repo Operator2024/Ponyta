@@ -5,8 +5,11 @@ targets:
   - vk.com
   - metropolis-online.ru
   - metropolistk.ru
-  - operator2018.ru
   - selectel.ru
+  - vpnl.operator2018.ru
+  - vpn.operator2018.ru
+  - snmp-n1.operator2018.ru
+  - 176.96.81.149
 
 dns:
   refresh: 30s
