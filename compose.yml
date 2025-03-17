@@ -44,6 +44,7 @@ services:
     command:
       - '--config.file=/snmp.yml'
       - '--config.expand-environment-variables'
+      - '--log.level=debug'
     ports:
       -  172.18.0.1:9116:9116
     restart: unless-stopped
@@ -70,6 +71,8 @@ services:
       - GF_SMTP_FROM_ADDRESS=${SMTP_FROM_ADDRESS}
       - GF_SMTP_FROM_NAME=Grafana
       - GF_SMTP_STARTTLS_POLICY=MandatoryStartTLS
+      # disable metrics in grafana http
+      - GF_METRICS_ENABLED=false
     volumes:
       - ./grafana:/etc/grafana/provisioning/datasources
       - 'grafana_storage:/var/lib/grafana'
