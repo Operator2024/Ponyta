@@ -1,14 +1,22 @@
 apiVersion: 1
 
 datasources:
-- name: Prometheus
-  type: prometheus
-  url: http://prometheus:$PROM_PORT
-  isDefault: true
-  access: proxy
-  editable: true
-  # uncomment if prom has basicAuth ans set password
-  basicAuth: true
-  basicAuthUser: $GF_SECURITY_ADMIN_USER
-  secureJsonData:
-   basicAuthPassword: $GF_SECURITY_ADMIN_PASSWORD
+  - name: Prometheus
+    type: prometheus
+    url: https://prometheus:$PROM_PORT
+    isDefault: true
+    access: proxy
+    editable: true
+    # uncomment if prom has basicAuth ans set password
+    basicAuth: true
+    basicAuthUser: $GF_SECURITY_ADMIN_USER
+    secureJsonData:
+      basicAuthPassword: $GF_SECURITY_ADMIN_PASSWORD
+    #   tlsCACert: <<Your TLS cert>>
+    #   tlsClientCert: <<Your client certificate>>
+    #   tlsClientKey: <<Your client key>>
+    # jsonData:
+    #   tlsAuth: <<true or false>> -- false by default
+    #   tlsAuthWithCACert: <<true or false>> -- false by default
+    #   serverName: <<server name that matches in certificate for tlsAuthWithCACert>>
+    # <string> json object of data that will be encrypted.
