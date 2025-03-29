@@ -10,7 +10,6 @@ datasources:
     # uncomment if prom has basicAuth ans set password
     basicAuth: true
     basicAuthUser: $GF_SECURITY_ADMIN_USER
-    cacheLevel: medium
     secureJsonData:
       basicAuthPassword: $GF_SECURITY_ADMIN_PASSWORD
       #  tlsCACert: $__file{/certs/tls.crt}
@@ -18,6 +17,7 @@ datasources:
       tlsClientKey: $__file{/etc/grafana/certs/tls.key}
     jsonData:
       tlsAuth: true
+      cacheLevel: medium
     #  tlsAuthWithCACert: <<true or false>> -- false by default
       serverName: $GF_SERVER_NAME # <<server name that matches in certificate for tlsAuthWithCACert>>
     # <string> json object of data that will be encrypted.
