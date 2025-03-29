@@ -1,0 +1,28 @@
+{
+  ".env": {
+    "__filepath__": "./",
+    "PROM_PORT": "",
+    "PROM_URL": "",
+    "DOMAIN": "",
+    "GF_USER": "",
+    "GF_SECRET": "",
+    "SMTP_HOST": "",
+    "SMTP_USER": "",
+    "SMTP_PASSWORD": "",
+    "SMTP_FROM_ADDRESS": ""
+  },
+  "web.yml": {
+    "__filepath__": "./",
+    "basic_auth_users": {
+      "admin": "admin"
+    },
+    "tls_server_confg": {
+      "cert_file": "/etc/prometheus/certs/tls.crt",
+      "key_file": "/etc/prometheus/certs/tls.key"
+    }
+  },
+  "secret": {
+    "__filepath__": "./",
+    "secret": "secret"
+  }
+}
