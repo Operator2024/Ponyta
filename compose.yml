@@ -12,8 +12,8 @@ services:
     restart: unless-stopped
     volumes:
       - ./prometheus:/etc/prometheus
-      - ~/app/certs/fullchain.pem:/etc/prometheus/certs/${DOMAIN}.crt
-      - ~/app/certs/privkey.pem:/etc/prometheus/certs/${DOMAIN}.key
+      - ~/app/certs/fullchain.pem:/etc/prometheus/certs/tls.crt
+      - ~/app/certs/privkey.pem:/etc/prometheus/certs/tls.key
       - prom_data:/prometheus
     networks:
       local-network:
@@ -67,10 +67,10 @@ services:
       - GF_SECURITY_ADMIN_USER=${GF_USER}
       - GF_SECURITY_ADMIN_PASSWORD=${GF_SECRET}
       - GF_SERVER_HTTP_PORT=3000
-      - GF_SERVER_CERT_FILE=/etc/grafana/certs/${DOMAIN}.crt
-      - GF_SERVER_CERT_KEY=/etc/grafana/certs/${DOMAIN}.key
+      - GF_SERVER_CERT_FILE=/etc/grafana/certs/tls.crt
+      - GF_SERVER_CERT_KEY=/etc/grafana/certs/tls.key
       - GF_SERVER_PROTOCOL=https
-      - GF_SERVER_ROOT_URL=https://${PROM_URL}:3000/
+      # - GF_SERVER_ROOT_URL=https://${PROM_URL}:3000/
       - GF_SERVER_DOMAIN=${DOMAIN}
       - GF_SMTP_ENABLED=true
       - GF_SMTP_HOST=${SMTP_HOST}
@@ -84,8 +84,8 @@ services:
       - GF_METRICS_ENABLED=false
     volumes:
       - ./grafana:/etc/grafana/provisioning/datasources
-      - ~/app/certs/fullchain.pem:/etc/grafana/certs/${DOMAIN}.crt
-      - ~/app/certs/privkey.pem:/etc/grafana/certs/${DOMAIN}.key
+      - ~/app/certs/fullchain.pem:/etc/grafana/certs/tls.crt
+      - ~/app/certs/privkey.pem:/etc/grafana/certs/tls.key
       - 'grafana_storage:/var/lib/grafana'
     networks:
       local-network:
