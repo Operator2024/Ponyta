@@ -83,6 +83,7 @@ services:
       # disable metrics in grafana http
       - GF_METRICS_ENABLED=true
       - GF_SERVER_NAME=${DOMAIN}
+      - GF_LOG_LEVEL=debug
     volumes:
       - ./grafana:/etc/grafana/provisioning/datasources
       - ~/app/certs/fullchain.pem:/etc/grafana/certs/tls.crt
