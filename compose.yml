@@ -81,7 +81,8 @@ services:
       - GF_SMTP_FROM_NAME=Grafana
       - GF_SMTP_STARTTLS_POLICY=MandatoryStartTLS
       # disable metrics in grafana http
-      - GF_METRICS_ENABLED=false
+      - GF_METRICS_ENABLED=true
+      - GF_SERVER_NAME=${DOMAIN}
     volumes:
       - ./grafana:/etc/grafana/provisioning/datasources
       - ~/app/certs/fullchain.pem:/etc/grafana/certs/tls.crt
