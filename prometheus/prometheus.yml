@@ -29,6 +29,15 @@ scrape_configs:
           group: "production"
           type: "internal"
 
+    # TESTING
+  - job_name: 'grafana_metrics'
+
+    scrape_interval: 15s
+    scrape_timeout: 5s
+
+    static_configs:
+      - targets: ['localhost:3000']
+
   # - job_name: "blackbox"
   #   static_configs:
   #     - targets: ["172.18.0.4:9115"]
