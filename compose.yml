@@ -7,6 +7,7 @@ services:
       - '--web.config.file=/etc/prometheus/web.yml'
       - '--web.enable-lifecycle'
       - '--web.external-url=${PROM_URL}'
+      - '--storage.tsdb.retention.size=31d'
     ports:
       - 172.18.0.1:9090:${PROM_PORT}
     restart: unless-stopped
@@ -83,7 +84,7 @@ services:
       # disable metrics in grafana http
       - GF_METRICS_ENABLED=true
       - GF_SERVER_NAME=${DOMAIN}
-      - GF_LOG_LEVEL=debug
+      # - GF_LOG_LEVEL=debug
     volumes:
       - ./grafana:/etc/grafana/provisioning/datasources
       - ~/app/certs/fullchain.pem:/etc/grafana/certs/tls.crt
