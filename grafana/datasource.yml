@@ -17,6 +17,8 @@ datasources:
       tlsClientKey: $__file{/etc/grafana/certs/tls.key}
     jsonData:
       tlsAuth: true
+      prometheusType: Prometheus
+      prometheusVersion: ">2.50.x"
       cacheLevel: Medium
     #  tlsAuthWithCACert: <<true or false>> -- false by default
       serverName: $GF_SERVER_NAME # <<server name that matches in certificate for tlsAuthWithCACert>>
