@@ -18,7 +18,7 @@ datasources:
     jsonData:
       tlsAuth: true
       prometheusType: Prometheus
-      prometheusVersion: ">2.50.x"
+      prometheusVersion: "2.50.1"
       cacheLevel: Medium
     #  tlsAuthWithCACert: <<true or false>> -- false by default
       serverName: $GF_SERVER_NAME # <<server name that matches in certificate for tlsAuthWithCACert>>
