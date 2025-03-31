@@ -21,7 +21,7 @@
       "key_file": "/etc/prometheus/certs/tls.key"
     }
   },
-  "secret": {
+  "secret.txt": {
     "__filepath__": "./",
     "secret": "secret"
   }
