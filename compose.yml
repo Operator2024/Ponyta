@@ -8,6 +8,7 @@ services:
       - '--web.enable-lifecycle'
       - '--web.external-url=${PROM_URL}'
       - '--storage.tsdb.retention.time=31d'
+      - '--log.level=debug'
     ports:
       - 172.18.0.1:9090:${PROM_PORT}
     restart: unless-stopped
@@ -85,6 +86,8 @@ services:
       - GF_METRICS_ENABLED=true
       - GF_METRICS_BASIC_AUTH_USERNAME=${GF_USER}
       - GF_METRICS_BASIC_AUTH_PASSWORD=${GF_SECRET}
+      - GF_METRICS_DISABLE_TOTAL_STATS=false # disable_total_stats
+      - GF_METRICS_TOTAL_STATS_COLLECTOR_INTERVAL_SECONDS=120 #total_stats_collector_interval_seconds
       - GF_SERVER_NAME=${DOMAIN}
       # - GF_LOG_LEVEL=debug
     volumes:
