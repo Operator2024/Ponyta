@@ -29,7 +29,6 @@ scrape_configs:
           group: "production"
           type: "internal"
 
-    # TESTING
   - job_name: 'grafana'
     scheme: https
     tls_config:
@@ -39,6 +38,9 @@ scrape_configs:
       # server_name: << INSERT SERVER NAME >>
     scrape_interval: 15s
     scrape_timeout: 5s
+    basic_auth:
+      username: admin
+      password_file: "/etc/prometheus/secret.txt"
 
     static_configs:
       - targets: ['grafana:3000']
