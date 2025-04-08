@@ -3,7 +3,7 @@ from pathlib import Path
 
 from yaml import dump as yml_dump
 
-CONFIG: Path = Path("cgenerator_config.json")
+CONFIG: Path = Path("cgenerator.json")
 BASE_FIELD: tuple = ("__filepath__", )
 
 
