@@ -14,8 +14,8 @@ services:
     restart: unless-stopped
     volumes:
       - ./prometheus:/etc/prometheus
-      - ~/app/certs/fullchain.pem:/etc/prometheus/certs/tls.crt
-      - ~/app/certs/privkey.pem:/etc/prometheus/certs/tls.key
+      - ./certs/fullchain.pem:/etc/prometheus/certs/tls.crt
+      - ./certs/privkey.pem:/etc/prometheus/certs/tls.key
       - prom_data:/prometheus
     networks:
       local-network:
@@ -93,8 +93,8 @@ services:
       # - GF_LOG_LEVEL=debug
     volumes:
       - ./grafana:/etc/grafana/provisioning/datasources
-      - ~/app/certs/fullchain.pem:/etc/grafana/certs/tls.crt
-      - ~/app/certs/privkey.pem:/etc/grafana/certs/tls.key
+      - ./certs/fullchain.pem:/etc/grafana/certs/tls.crt
+      - ./certs/privkey.pem:/etc/grafana/certs/tls.key
       - 'grafana_storage:/var/lib/grafana'
     networks:
       local-network:
