@@ -9,6 +9,7 @@ services:
       - '--web.external-url=${PROM_URL}'
       - '--storage.tsdb.retention.time=31d'
       - '--log.level=debug'
+      - '--web.route-prefix=/'
     ports:
       - 172.18.0.1:9090:${PROM_PORT}
     restart: unless-stopped
