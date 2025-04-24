@@ -60,11 +60,11 @@ scrape_configs:
       - source_labels: [__param_target]
         target_label: instance
       - target_label: __address__
-        replacement: 172.18.0.4:9115  # The blackbox exporter's real hostname:port.
+        replacement: 172.18.0.5:9115  # The blackbox exporter's real hostname:port.
 
   - job_name: "blackbox"
     static_configs:
-      - targets: ["172.18.0.4:9115"]
+      - targets: ["172.18.0.5:9115"]
         labels:
           status: "production"
           type: "internal"
