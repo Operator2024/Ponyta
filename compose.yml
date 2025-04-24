@@ -100,6 +100,20 @@ services:
     networks:
       local-network:
         ipv4_address: 172.18.0.3
+
+  blackbox:
+    image: prom/blackbox-exporter:v0.26.0
+    ports:
+    - 172.18.0.1:9115:9115
+    command:
+    - --config.file=/etc/blackbox/blackbox.yml
+    volumes:
+    - ./blackbox_exporter/blackbox.yml:/etc/blackbox/blackbox.yml
+    networks:
+      local-network:
+        ipv4_address: 172.18.0.5
+    restart: unless-stopped
+
 volumes:
   prom_data:
   grafana_storage:
