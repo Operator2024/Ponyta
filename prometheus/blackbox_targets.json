@@ -1,7 +1,9 @@
 [
   {
     "labels": {
-      "job": "blackbox"
+      "job": "blackbox",
+      "status": "production",
+      "type": "external"
     },
     "targets": [
       "http://prometheus.io",

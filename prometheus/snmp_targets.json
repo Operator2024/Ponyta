@@ -1,5 +1,9 @@
 [
   {
+    "labels": {
+      "status": "production",
+      "type": "external"
+    },
     "targets": [
       "snmp-n1.operator2018.ru"
     ]

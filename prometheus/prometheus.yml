@@ -1,6 +1,6 @@
 global:
-  scrape_interval: 60s # By default, scrape targets every 15 seconds.
-  evaluation_interval: 15s # Evaluate rules every 15 seconds.
+  scrape_interval: 15s # By default, scrape targets every 15 seconds.
+  evaluation_interval: 20s # Evaluate rules every 20 seconds. Default is 15s
 
   # Attach these extra labels to all timeseries collected by this Prometheus instance.
   # external_labels:
@@ -12,7 +12,7 @@ rule_files:
 scrape_configs:
   - job_name: "prometheus"
     # Override the global default and scrape targets from this job every 5 seconds.
-    scrape_interval: 60s
+    scrape_interval: 5s
     scheme: https
     tls_config:
       cert_file: /etc/prometheus/certs/tls.crt
@@ -26,7 +26,7 @@ scrape_configs:
     static_configs:
       - targets: ["localhost:9090"]
         labels:
-          group: "production"
+          status: "production"
           type: "internal"
 
   - job_name: 'grafana'
@@ -36,7 +36,6 @@ scrape_configs:
       key_file: /etc/prometheus/certs/tls.key
       insecure_skip_verify: false
       # server_name: << INSERT SERVER NAME >>
-    scrape_interval: 15s
     scrape_timeout: 5s
     basic_auth:
       username: admin
@@ -44,8 +43,11 @@ scrape_configs:
 
     static_configs:
       - targets: ['grafana:3000']
+        labels:
+          status: "production"
+          type: "internal"
 
-  - job_name: 'blackbox'
+  - job_name: 'blackbox_exporter'
     metrics_path: /probe
     params:
       module: [http_2xx]  # Look for a HTTP 200 response.
@@ -64,21 +66,21 @@ scrape_configs:
     static_configs:
       - targets: ["172.18.0.4:9115"]
         labels:
-          group: "production"
+          status: "production"
           type: "internal"
 
   - job_name: "ping"
     static_configs:
       - targets: ["ping_exporter:9427"]
         labels:
-          group: "production"
+          status: "production"
           type: "internal"
 
   - job_name: "node"
     static_configs:
       - targets: ["172.18.0.1:9100"]
         labels:
-          group: "production"
+          status: "production"
           type: "internal"
 
   - job_name: "snmp_interface"
@@ -122,9 +124,12 @@ scrape_configs:
   - job_name: "snmp_exporter"
     static_configs:
       - targets: ["snmp_exporter:9116"]
+        labels:
+          status: "production"
+          type: "internal"
 
   - job_name: "external"
-    # Override the global default and scrape targets from this job every 5 seconds.
+    # Override the global default and scrape targets from this job every 60 seconds.
     scrape_interval: 60s
 
     file_sd_configs:
