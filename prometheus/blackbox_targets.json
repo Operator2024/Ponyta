@@ -1,0 +1,12 @@
+[
+  {
+    "labels": {
+      "job": "blackbox"
+    },
+    "targets": [
+      "http://prometheus.io",
+      "https://prometheus.io",
+      "https://blackbox.operator2018.ru"
+    ]
+  }
+]
