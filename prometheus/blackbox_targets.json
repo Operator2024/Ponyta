@@ -1,14 +1,13 @@
 [
-  {
-    "labels": {
-      "job": "blackbox",
-      "status": "production",
-      "type": "external"
-    },
-    "targets": [
-      "http://prometheus.io",
-      "https://prometheus.io",
-      "https://blackbox.operator2018.ru"
-    ]
-  }
+    {
+        "labels": {
+            "job": "blackbox",
+            "status": "production",
+            "type": "external"
+        },
+        "targets": [
+            "http://prometheus.io",
+            "https://prometheus.io"
+        ]
+    }
 ]

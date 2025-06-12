@@ -1,0 +1,28 @@
+scrape_configs:
+  - job_name: 'grafana'
+    {% if scheme == 'https' and server_name %}
+    scheme: {{ scheme }}
+    tls_config:
+      cert_file: /etc/prometheus/certs/tls.crt
+      key_file: /etc/prometheus/certs/tls.key
+      insecure_skip_verify: false
+      server_name: {{ server_name }}
+    {% else %}
+    scheme: http
+    {% endif %}
+    scrape_timeout: 5s
+    {% if basic_auth %}
+    basic_auth:
+      username: {{ basic_auth.username }}
+      {% if basic_auth.password_file %}
+      password_file: {{ basic_auth.password_file }}
+      {% else %}
+      password: {{ basic_auth.password }}
+      {% endif %}
+    {% endif %}
+
+    static_configs:
+      - targets: ['grafana:3000']
+        labels:
+          status: "production"
+          type: "internal"{{'\n'}}

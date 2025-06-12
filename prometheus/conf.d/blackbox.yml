@@ -1,0 +1,7 @@
+scrape_configs:
+  - job_name: "blackbox"
+    static_configs:
+      - targets: ["172.18.0.5:9115"]
+        labels:
+          status: "production"
+          type: "internal"
