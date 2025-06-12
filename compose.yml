@@ -24,6 +24,8 @@ services:
   ping_exporter:
     image: czerwonk/ping_exporter@sha256:11592d365c3331db72fc7351ec980401e792d638f834593603fac5ee25a27495
     container_name: ping_exporter
+    command:
+      - '--config.path=/config/ping.yml'
     ports:
       - 172.18.0.1:9427:9427
     restart: unless-stopped
@@ -101,7 +103,7 @@ services:
       local-network:
         ipv4_address: 172.18.0.3
 
-  blackbox:
+  blackbox_exporter:
     image: prom/blackbox-exporter:v0.26.0
     container_name: blackbox
     ports:
