@@ -55,3 +55,55 @@ Additionally, there is a file for cloud-init, which allows you to deploy a cloud
 * пользователь - **ponyta**,
 * пароль - **defaultpass**,
 * порт - **2222**
+
+### Project hierarchy
+
+```bash
+├── blackbox_exporter
+│   └── blackbox.yml
+├── cgenerator
+│   ├── grafana.py
+│   ├── __init__.py
+│   ├── prometheus.py
+│   ├── templates
+│   │   ├── grafana
+│   │   │   └── datasource.jinja
+│   │   └── prometheus
+│   │       ├── blackbox_exporter.jinja
+│   │       ├── blackbox.jinja
+│   │       ├── grafana.jinja
+│   │       ├── node_exporter.jinja
+│   │       ├── ping_exporter.jinja
+│   │       ├── prometheus.jinja
+│   │       ├── snmp_exporter.jinja
+│   │       ├── snmp_extended.jinja
+│   │       └── snmp_interface.jinja
+│   └── utils.py
+├── cgenerator.json
+├── cgenerator.log
+├── cgenerator.py
+├── compose.yml
+├── grafana
+│   └── datasource.yml
+├── passgen.sh
+├── ping_exporter
+│   └── ping.yml
+├── prometheus
+│   ├── blackbox_targets.json
+│   ├── conf.d
+│   │   ├── blackbox_exporter.yml
+│   │   ├── blackbox.yml
+│   │   ├── node_exporter.yml
+│   │   ├── ping_exporter.yml
+│   │   └── prometheus.yml
+│   ├── first.rules
+│   ├── prometheus.yml
+│   ├── secret.txt
+│   ├── snmp_targets.json
+│   ├── targets.json
+│   └── web.yml
+├── README.md
+├── requirements.txt
+├── snmp.yml
+└── user_data.yml
+```
