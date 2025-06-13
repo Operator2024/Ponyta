@@ -1,0 +1,134 @@
+#cloud-config
+---
+cloud_config_modules:
+  - resolv_conf
+  - apt-configure
+  - write-files
+  - runcmd
+
+# cloud_final_modules:
+#   - apt-configure
+
+output: { all: "| tee -a /var/log/cloud-init.log" }
+
+ssh_pwauth: true
+
+timezone: "Europe/Moscow"
+
+groups:
+  - docker
+
+system_info:
+  distro: ubuntu
+  default_user:
+    name: ponyta
+    gecos: Default (ubuntu user)
+    # mkpasswd --method=SHA-512 --rounds=4096
+    # default password - defaultpass
+    passwd: $6$3M3g/FVbLyVS31Jm$IjlkrLMD4kqpJuWJpsNSxCg/6b9bmMt0BKH5xGqCe6mTFOjlhuSTYkjDbY5N4LqXl0DZSAw4KAwdnZVsPrE5Z1
+    # ssh_authorized_keys:
+    # plain_text_passwd: changepass
+    sudo: ALL=(ALL) NOPASSWD:ALL
+    groups: [users, docker]
+    shell: /bin/bash
+    lock_passwd: false
+users:
+  - default
+  - name: root
+    # ssh_authorized_keys: insert your key
+    lock_passwd: true
+
+# https://cloudinit.readthedocs.io/en/23.4.1/reference/modules.html#module-cloudinit.config.cc_write_files
+write_files:
+  #
+  - path: /etc/systemd/resolved.conf.d/dns.conf
+    permissions: "0644"
+    content: |
+      [Resolve]
+      DNS=77.88.8.1 9.9.9.9 8.8.4.4
+  - path: /etc/ssh/sshd_config.d/60-cloud-init-port.conf
+    permissions: "0600"
+    content: |
+      Port 2222
+      MaxAuthTries 3
+      MaxSessions 3
+      AllowUsers ponyta
+
+# Configure and update apt
+apt:
+  preserve_sources_list: true
+  # disable_suites:
+  #   - $RELEASE-updates
+  #   - backports
+  #   - $RELEASE
+  primary:
+    - arches:
+        - default
+      uri: "https://mirror.yandex.ru/ubuntu/"
+  security:
+    - uri: "https://mirror.yandex.ru/ubuntu/"
+      arches: [default]
+  sources_list: |
+    deb $MIRROR $RELEASE main restricted
+    # deb-src $MIRROR $RELEASE main restricted
+
+    deb $PRIMARY $RELEASE universe
+    deb $PRIMARY $RELEASE-updates universe
+
+    deb $PRIMARY $RELEASE multiverse
+    deb $PRIMARY $RELEASE-updates multiverse
+
+    deb $SECURITY $RELEASE-updates restricted
+
+    deb $SECURITY $RELEASE-backports main restricted universe multiverse
+
+    deb $SECURITY $RELEASE-security main
+    deb $SECURITY $RELEASE-security multiverse
+    deb $SECURITY $RELEASE-security universe
+    deb $SECURITY $RELEASE-security restricted
+  sources:
+    deadsnakes.list:
+      source: deb http://ppa.launchpad.net/deadsnakes/ppa/ubuntu $RELEASE main
+      keyid: F23C5A6CF475977595C89F51BA6932366A755776
+      append: false
+
+package_update: true
+packages:
+  - wget
+  - tree
+  - apt-transport-https
+  - pigz
+  - mc
+  - htop
+  - atop
+  - nmon
+  - sysstat
+  - iptables-persistent
+  - screenfetch
+  - neofetch
+  - ifupdown
+  - python3-pip
+  - git
+  - net-tools
+  - sshuttle
+  - pbzip2
+  - traceroute
+  - ca-certificates
+  - curl
+  - gnupg
+  - lsb-release
+  - bash-completion
+  - apache2-utils
+
+runcmd:
+  - sudo systemctl restart systemd-resolved.service
+  - mkdir -p /etc/apt/keyrings
+  - curl -fsSL https://download.docker.com/linux/ubuntu/gpg | gpg --dearmor -o /etc/apt/keyrings/docker.gpg
+  - echo "deb [arch=$(dpkg --print-architecture) signed-by=/etc/apt/keyrings/docker.gpg] https://download.docker.com/linux/ubuntu $(lsb_release -cs) stable" | tee /etc/apt/sources.list.d/docker.list > /dev/null
+  - apt-get update
+  - apt-get install -y docker-ce docker-ce-cli containerd.io docker-compose docker-compose-plugin docker-buildx-plugin
+  - update-grub
+  - mkdir /home/ponyta/app
+  - chown -R ponyta:ponyta /home/ponyta/app
+
+final_message: "The system is finally up, after $UPTIME seconds"
