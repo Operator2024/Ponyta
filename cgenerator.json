@@ -15,7 +15,10 @@
       "SMTP_HOST": "",
       "SMTP_USER": "",
       "SMTP_PASSWORD": "",
-      "SMTP_FROM_ADDRESS": ""
+      "SMTP_FROM_ADDRESS": "",
+      "GF_SERVER_CERT_FILE": "/etc/grafana/certs/tls.crt",
+      "GF_SERVER_CERT_KEY":"/etc/grafana/certs/tls.key",
+      "GF_SERVER_PROTOCOL":"http"
     }
   },
   "web.yml": {
