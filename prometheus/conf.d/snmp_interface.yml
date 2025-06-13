@@ -2,7 +2,7 @@ scrape_configs:
   - job_name: "snmp_interface"
     file_sd_configs:
       - files:
-          - "snmp_targets.json"
+          - "../snmp_targets.json"
         refresh_interval: 120s
     scrape_interval: 20s
     scrape_timeout: 10s

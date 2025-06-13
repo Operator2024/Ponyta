@@ -2,7 +2,7 @@ scrape_configs:
   - job_name: "snmp_extended"
     file_sd_configs:
       - files:
-          - "snmp_targets.json"
+          - "../snmp_targets.json"
         refresh_interval: 120s
     {% if scrape_interval  %}
     scrape_interval: {{ scrape_interval }}
