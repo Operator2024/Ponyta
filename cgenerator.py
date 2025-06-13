@@ -144,6 +144,7 @@ def main() -> None:
                         filename="snmp_targets.json",
                         force=args.force,
                     )
+                    utils.env_dump(config=service_config, service=service)
             case "ping_exporter":
                 ping = Prometheus(**service_config[srv_name])
                 ping.generate(service=service)

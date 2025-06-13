@@ -45,12 +45,15 @@ services:
       - '/:/host:ro,rslave'
   snmp_exporter:
     # main branch pin to last image
-    image: quay.io/prometheus/snmp-exporter@sha256:08392fc5c93b0761fc4a6b09e51b7094c961e22d701f06f42adc51e5869fe888
+    image: quay.io/prometheus/snmp-exporter:v0.29.0
     container_name: snmp_exporter
     command:
       - '--config.file=/snmp.yml'
       - '--config.expand-environment-variables'
       - '--log.level=debug'
+    environment:
+      - SNMP_USER=${SNMP_USER}
+      - SNMP_SECRET=${SNMP_SECRET}
     ports:
       -  172.18.0.1:9116:9116
     restart: unless-stopped

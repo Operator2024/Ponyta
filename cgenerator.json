@@ -19,6 +19,10 @@
       "GF_SERVER_CERT_FILE": "/etc/grafana/certs/tls.crt",
       "GF_SERVER_CERT_KEY":"/etc/grafana/certs/tls.key",
       "GF_SERVER_PROTOCOL":"http"
+    },
+    "snmp_exporter":{
+      "SNMP_SECRET": "defaultpassword",
+      "SNMP_USER": "admin"
     }
   },
   "web.yml": {
