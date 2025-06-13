@@ -8,6 +8,7 @@ import yaml
 
 import cgenerator
 from cgenerator import WEB_CONFIG_FILE, utils
+from cgenerator.grafana import Grafana
 from cgenerator.prometheus import Prometheus
 
 logging.config.dictConfig(cgenerator.logging_config)
@@ -163,6 +164,12 @@ def main() -> None:
                         force=args.force,
                     )
             case "grafana":
+                datasource = Grafana(**service_config["datasource.yml"])
+                datasource.generate(service="datasource")
+                datasource.config_dump(
+                    filename="datasource.yml",
+                    force=args.force,
+                )
                 grafana = Prometheus(**service_config[srv_name])
                 grafana.generate(service=service)
                 grafana.config_dump(filename=srv_name, force=args.force)

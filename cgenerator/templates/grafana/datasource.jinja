@@ -1,0 +1,35 @@
+apiVersion: 1
+
+datasources:
+  - name: Prometheus
+    type: prometheus
+    {% if scheme == 'https' %}
+    url: https://prometheus:$PROM_PORT
+    {% else %}
+    url: http://prometheus:$PROM_PORT
+    {% endif %}
+    isDefault: true
+    access: proxy
+    editable: true
+    # uncomment if prom has basicAuth ans set password
+    basicAuth: true
+    basicAuthUser: $GF_SECURITY_ADMIN_USER
+    secureJsonData:
+      basicAuthPassword: $GF_SECURITY_ADMIN_PASSWORD
+      {% if scheme == 'https' %}
+      #  tlsCACert: $__file{/certs/tls.crt}
+      tlsClientCert: $__file{/etc/grafana/certs/tls.crt}
+      tlsClientKey: $__file{/etc/grafana/certs/tls.key}
+      {% endif %}
+    jsonData:
+      {% if scheme == 'https' %}
+      tlsAuth: true
+      {% endif %}
+      prometheusType: Prometheus
+      prometheusVersion: "2.50.1"
+      cacheLevel: Medium
+    #  tlsAuthWithCACert: <<true or false>> -- false by default
+      {% if scheme == 'https' %}
+      serverName: $GF_SERVER_NAME # <<server name that matches in certificate for tlsAuthWithCACert>>
+    # <string> json object of data that will be encrypted.
+      {% endif %}

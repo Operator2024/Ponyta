@@ -128,5 +128,9 @@
       "username": "admin",
       "password_file": "/etc/prometheus/secret.txt"
     }
+  },
+  "datasource.yml": {
+    "_filepath_": "./grafana/",
+    "scheme": "http"
   }
 }
