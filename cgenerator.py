@@ -17,6 +17,7 @@ logging.config.dictConfig(cgenerator.logging_config)
 logger = logging.getLogger()
 
 ALLOWED_SERVICES: set[str] = set()
+COMPOSE_CMD: str = "docker-compose up -d "
 COMPOSE: Path = Path("compose.yml")
 CONFIG: Path = Path("cgenerator.json")
 
@@ -31,6 +32,7 @@ def load_config() -> dict:
 
 def get_allowed_services(cmd_args: list) -> None:
     global ALLOWED_SERVICES
+    global COMPOSE_CMD
 
     prom_job_mapping: dict[str, set] = {
         "prometheus": set(["prometheus"]),
@@ -49,6 +51,7 @@ def get_allowed_services(cmd_args: list) -> None:
         for service in compose["services"]:
             if service in cmd_args:
                 ALLOWED_SERVICES.update(prom_job_mapping[service])
+                COMPOSE_CMD += service + " "
     return
 
 
@@ -180,6 +183,7 @@ def main() -> None:
         logger.info(
             msg_hdr + " " + "Service '%s' generator finished" + " " + msg_hdr,
             service)
+    logger.info("Docker compose command for services: %s", COMPOSE_CMD)
 
 
 if __name__ == "__main__":
