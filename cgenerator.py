@@ -1,4 +1,5 @@
 #!/usr/bin/env python3
+"""Cgenerator main module."""
 
 import argparse
 import logging
