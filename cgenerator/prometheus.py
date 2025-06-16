@@ -31,7 +31,7 @@ class BasicAuth(BaseModel):
             return
         dst_path: Path = Path(password_file.get("_filepath_"), filename)
         if not dst_path.is_file() or force:
-            with dst_path.open("w") as f:
+            with dst_path.open("w", encoding="utf-8") as f:
                 f.write(password_file["secret"])
             logger.info("Data for %s written to %s", filename, dst_path)
             return
@@ -98,7 +98,7 @@ class Prometheus(BaseModel):
             logger.info("Creating directory %s", self.filepath)
             Path(self.filepath).mkdir(parents=True)
 
-        with path_to_file.open("w") as f:
+        with path_to_file.open("w", encoding="utf-8") as f:
             f.write(self._service_cfg)
 
         logger.info("Config for %s written to %s", filename, path_to_file)

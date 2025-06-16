@@ -8,12 +8,12 @@ from pathlib import Path
 
 import yaml
 
-import cgenerator
-from cgenerator import WEB_CONFIG_FILE, utils
+from cgenerator.config import WEB_CONFIG_FILE, logging_config
 from cgenerator.grafana import Grafana
 from cgenerator.prometheus import Prometheus
+from cgenerator.utils import data_dump, env_dump, is_key_exists
 
-logging.config.dictConfig(cgenerator.logging_config)
+logging.config.dictConfig(logging_config)
 logger = logging.getLogger()
 
 ALLOWED_SERVICES: set[str] = set()
@@ -23,39 +23,38 @@ CONFIG: Path = Path("cgenerator.json")
 
 
 def load_config() -> dict:
+    """Load config file."""
     config = {}
-    with open(CONFIG) as f:
-        config = yaml.load(f, Loader=yaml.Loader)
+    with CONFIG.open("r", encoding="utf-8") as f:
+        config = yaml.safe_load(f)
         logger.info("Service config loaded!")
     return config
 
 
 def get_allowed_services(cmd_args: list) -> None:
-    global ALLOWED_SERVICES
+    """Get list of allowed services based on docker-compose file."""
     global COMPOSE_CMD
-
     prom_job_mapping: dict[str, set] = {
-        "prometheus": set(["prometheus"]),
-        "node_exporter": set(["node_exporter"]),
-        "snmp_exporter":
-        set(["snmp_exporter", "snmp_extended", "snmp_interface"], ),
-        "ping_exporter": set(["ping_exporter"]),
-        "blackbox_exporter": set(["blackbox_exporter", "blackbox"]),
-        "grafana": set(["grafana"]),
+        "prometheus": {"prometheus"},
+        "node_exporter": {"node_exporter"},
+        "snmp_exporter": {"snmp_exporter", "snmp_extended", "snmp_interface"},
+        "ping_exporter": {"ping_exporter"},
+        "blackbox_exporter": {"blackbox_exporter", "blackbox"},
+        "grafana": {"grafana"},
     }
 
     if COMPOSE.exists():
         compose = {}
-        with open(COMPOSE) as f:
-            compose = yaml.load(f, Loader=yaml.Loader)
+        with COMPOSE.open("r", encoding="utf-8") as f:
+            compose = yaml.safe_load(f)
         for service in compose["services"]:
             if service in cmd_args:
                 ALLOWED_SERVICES.update(prom_job_mapping[service])
                 COMPOSE_CMD += service + " "
-    return
 
 
 def main() -> None:
+    """Do main work for generating config files."""
     msg_hdr: str = "===" * 3
     logger.info("Starting config generator")
     parser = argparse.ArgumentParser(
@@ -108,63 +107,53 @@ def main() -> None:
     if not ALLOWED_SERVICES:
         logger.warning("No allowed services found")
         sys.exit(0)
-
-    logger.info("Allowed services: " + ", ".join(ALLOWED_SERVICES))
+    msg_allowed_services: str = ", ".join(ALLOWED_SERVICES)
+    logger.info("Allowed services: %s", msg_allowed_services)
     service_config = load_config()
     service_extension = ".yml"
     for service in ALLOWED_SERVICES:
         srv_name: str = service + service_extension
-        if not utils.is_key_exists(
+        if not is_key_exists(
                 config=service_config,
                 service=service,
                 service_ext=service_extension,
         ):
             continue
-        logger.info(
-            msg_hdr + " " + "Service '%s' generator started" + " " + msg_hdr,
-            service)
+        logger.info("%s Service '%s' genetrator started %s", msg_hdr, service,
+                    msg_hdr)
+
+        prom = Prometheus(**service_config[srv_name])
+        prom.generate(service=service)
+        prom.config_dump(filename=srv_name, force=args.force)
+
         match service:
             case "prometheus":
-                prom = Prometheus(**service_config[srv_name])
                 prom.secret_dump(config=service_config, force=args.force)
-                prom.generate(service=service)
-                prom.config_dump(filename=srv_name, force=args.force)
-                utils.env_dump(config=service_config, service=service)
-                utils.data_dump(
+                env_dump(config=service_config, service=service)
+                data_dump(
                     config=service_config,
                     filename=WEB_CONFIG_FILE,
                     force=args.force,
                 )
-            case "node_exporter":
-                node = Prometheus(**service_config[srv_name])
-                node.generate(service=service)
-                node.config_dump(filename=srv_name, force=args.force)
             case "snmp_exporter" | "snmp_extended" | "snmp_interface":
-                snmp = Prometheus(**service_config[srv_name])
-                snmp.generate(service=service)
-                snmp.config_dump(filename=srv_name, force=args.force)
+                snmp = prom
                 if snmp.file_sd_configs:
-                    utils.data_dump(
+                    data_dump(
                         config=service_config,
                         filename="snmp_targets.json",
                         force=args.force,
                     )
-                    utils.env_dump(config=service_config, service=service)
+                    env_dump(config=service_config, service=service)
             case "ping_exporter":
-                ping = Prometheus(**service_config[srv_name])
-                ping.generate(service=service)
-                ping.config_dump(filename=srv_name, force=args.force)
-                utils.data_dump(
+                data_dump(
                     config=service_config,
                     filename="ping.yml",
                     force=args.force,
                 )
             case "blackbox_exporter" | "blackbox":
-                blackbox = Prometheus(**service_config[srv_name])
-                blackbox.generate(service=service)
-                blackbox.config_dump(filename=srv_name, force=args.force)
+                blackbox = prom
                 if blackbox.file_sd_configs:
-                    utils.data_dump(
+                    data_dump(
                         config=service_config,
                         filename="blackbox_targets.json",
                         force=args.force,
@@ -176,13 +165,9 @@ def main() -> None:
                     filename="datasource.yml",
                     force=args.force,
                 )
-                grafana = Prometheus(**service_config[srv_name])
-                grafana.generate(service=service)
-                grafana.config_dump(filename=srv_name, force=args.force)
-                utils.env_dump(config=service_config, service=service)
-        logger.info(
-            msg_hdr + " " + "Service '%s' generator finished" + " " + msg_hdr,
-            service)
+                env_dump(config=service_config, service=service)
+        logger.info("%s Service '%s' genetrator finished %s", msg_hdr, service,
+                    msg_hdr)
     logger.info("Docker compose command for services: %s", COMPOSE_CMD)
 
 
