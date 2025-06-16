@@ -1,3 +1,3 @@
-snmp.*
-user_data.*
+snmp_.*
+user_data_.*
 private/
