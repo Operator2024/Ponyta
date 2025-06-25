@@ -6,6 +6,11 @@ cloud_config_modules:
   - write-files
   - runcmd
 
+# uncomment if you need to set fqdn
+manage_etc_hosts: true
+# fqdn: netes-master1.example.org
+# hostname: netes-master1
+
 # cloud_final_modules:
 #   - apt-configure
 
