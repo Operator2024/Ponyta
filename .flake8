@@ -1,0 +1,13 @@
+[flake8]
+; ignore =
+exclude = .git,__pycache__,.ruff_cache,.mypy_cache,.venv,.venv_*
+max-complexity = 10
+color = always
+max-line-length = 88
+# select = B,C,E,F,W,B9,P,Q
+ignore = SC200, DAR101, DAR201, PLW603
+extend-select = B950, B907
+inline-quotes = double
+per-file-ignores =
+  __init__.py:D104
+  config.py:D100,PLC114

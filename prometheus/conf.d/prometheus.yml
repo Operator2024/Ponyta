@@ -1,0 +1,14 @@
+scrape_configs:
+  - job_name: "prometheus"
+    # Override the global default and scrape targets from this job every 5s seconds.
+    scrape_interval: 5s
+    scheme: http
+    basic_auth:
+      username: admin
+      password_file: /etc/prometheus/secret.txt
+
+    static_configs:
+      - targets: ["localhost:9090"]
+        labels:
+          status: "production"
+          type: "internal"

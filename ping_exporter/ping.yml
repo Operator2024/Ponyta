@@ -1,0 +1,16 @@
+dns:
+  nameserver: 9.9.9.9
+  refresh: 30s
+options:
+  disableIPv6: true
+ping:
+  history-size: 42
+  interval: 2s
+  payload-size: 120
+  timeout: 5s
+targets:
+  - 8.8.8.8
+  - 8.8.4.4
+  - google.com
+  - vk.com
+  - selectel.ru

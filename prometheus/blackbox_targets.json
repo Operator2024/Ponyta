@@ -1,0 +1,13 @@
+[
+    {
+        "labels": {
+            "job": "blackbox",
+            "status": "production",
+            "type": "external"
+        },
+        "targets": [
+            "http://prometheus.io",
+            "https://prometheus.io"
+        ]
+    }
+]

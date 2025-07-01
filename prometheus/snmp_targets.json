@@ -1,0 +1,9 @@
+[
+    {
+        "labels": {
+            "status": "production",
+            "type": "external"
+        },
+        "targets": []
+    }
+]
