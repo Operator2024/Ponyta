@@ -13,7 +13,7 @@
 ---
 <div align="center">
 
-![Static Badge](https://img.shields.io/badge/version-1.0-lightgreen?style=flat)
+![Static Badge](https://img.shields.io/badge/version-1.0.0-lightgreen?style=flat)
 
 </div>
 
