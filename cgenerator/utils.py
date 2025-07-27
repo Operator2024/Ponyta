@@ -1,46 +1,37 @@
 """Module containing additional functions."""
 from __future__ import annotations
 
+import copy
 import json
-import logging
 from pathlib import Path
 
 from yaml import Dumper
 from yaml import dump as yml_dump
 
-from cgenerator.config import ENV_FILE  # noqa: PLE611
-
-logger = logging.getLogger()
+from cgenerator.config import CONFIG_MAPPING, ENV_FILE, MESSAGE_HDR, logger
+from cgenerator.grafana import Datasource
+from cgenerator.prometheus import Job
 
 
 # https://github.com/yaml/pyyaml/issues/234
 class IndentDumper(Dumper):
     """IndentDumper class."""
 
-    def increase_indent(self, flow=False, indentless=False) -> None:
+    def increase_indent(self, flow: bool = False, *args, **kwargs) -> None:
         """Increase indent level."""
-        return super().increase_indent(flow, False)
-
-
-def is_key_exists(config: dict, service: str, service_ext: str) -> bool:
-    """Check if key exists in config."""
-    if service + service_ext not in config:
-        logger.warning("No config found for job '%s' ", service)
-        return False
-    return True
+        return super().increase_indent(flow=flow, indentless=False)
 
 
 def env_dump(config: dict[str, dict], service: str) -> None:
     """Dump environment variables as a string."""
     env = config.get(ENV_FILE)
     if not env:
-        logger.warning(
-            "Environment variables not found! Generating skipping ...")
+        logger.debug("Environment variables not found! Generating skipping ")
         return
     service_env = env.get(service)
     if not service_env:
-        logger.warning(
-            "Environment variables for '%s' not found! Generating skipping ...",
+        logger.debug(
+            "Environment variables for '%s' not found! Generating skipping ",
             service)
         return
     filepath = Path(env.get("_filepath_", "./"), ENV_FILE)
@@ -65,18 +56,23 @@ def env_dump(config: dict[str, dict], service: str) -> None:
 def data_dump(config: dict, filename: str, force: bool) -> None:
     """Save data to file."""
     file_ext = filename.split(".")[-1]
-    data = config.get(filename)
+    data: dict = config
     if not data:
-        logger.warning("Data for '%s' not found! "
-                       "Generating skipping ...", filename)
+        logger.debug(
+            "Data for '%s' not found! "
+            "Generating skipping ",
+            filename,
+        )
         return
     dst_path: Path = Path(
-        data.get("_filepath_"),
+        data.get("_filepath_", ""),
         filename,
     )
     if not dst_path.is_file() or force:
+        data.pop("_filepath_", None)
+        data.pop("bind_service", None)
+        data.pop("bind_module", None)
         with dst_path.open("w", encoding="utf-8") as f:
-            data.pop("_filepath_")
             if file_ext == "yml":
                 yml_dump(
                     data,
@@ -89,4 +85,126 @@ def data_dump(config: dict, filename: str, force: bool) -> None:
                 json.dump(data.get("data", {}), f, indent=4)
         logger.info("Data for '%s' written to '%s'", filename, dst_path)
         return
-    logger.info("File '%s' already exists", dst_path)
+    logger.debug("File '%s' already exists", dst_path)
+
+
+def prepare_config(default_config: dict, override_config: dict) -> dict:
+    """Prepare config for jinja."""
+    bind_service_field: str = "bind_service"
+    bind_module_field: str = "bind_module"
+
+    config: dict = copy.deepcopy(default_config)
+    for key, value in default_config.items():
+        if key in override_config:
+            config[key] = merge(value, override_config[key])
+
+        if bind_service_field not in config[
+                key] and bind_module_field not in config[key] and key != ".env":
+            config.pop(key)
+            logger.debug(
+                "Attribute '%s' and '%s' not found!"
+                " Config '%s' removed ", bind_service_field, bind_module_field,
+                key)
+    return config
+
+
+def merge(default_config: dict, override_config: dict, level: int = 3) -> dict:
+    """Merge config."""
+    if not isinstance(override_config, default_config.__class__):
+        logger.debug("Merge config error. Type mismatch!")
+        return default_config
+
+    for key, value in override_config.items():
+        if key not in default_config:
+            default_config[key] = value
+            continue
+
+        if isinstance(value, dict) and level > 0:
+            default_config[key] = merge(default_config[key], value, level - 1)
+        if isinstance(value, dict) and level <= 0:
+            logger.warning("Merge key '%s' skipped, level is 0", key)
+            logger.debug("Config: %s", override_config)
+        if isinstance(value, (int, float, str, tuple, list)):
+            default_config[key] = value
+
+    return default_config
+
+
+def display_config_map(config_map: dict[str, set]) -> None:
+    """Display of found configurations for docker compose services."""
+    logger.debug("Next configurations was found for services:")
+    for key, value in config_map.items():
+        logger.debug(
+            "  -> '%s': %s",
+            key,
+            ", ".join(value) if value else "None",
+        )
+
+
+def deploy_service(
+    config_name: str,
+    configs: dict,
+    force: bool,
+) -> None:
+    """Deploy service."""
+    config = configs[config_name]
+    bind_module = config.get("bind_module")
+    match bind_module:
+        case "file":
+            logger.debug(
+                "%s Deploying file '%s' ",
+                MESSAGE_HDR,
+                config_name,
+            )
+            data_dump(config, config_name, force=force)
+        case "promjob":
+            logger.debug(
+                "%s Deploying promjob '%s' ",
+                MESSAGE_HDR,
+                config_name,
+            )
+            promjob = Job(**config)
+            promjob.generate(template_name=config_name)
+            promjob.config_dump(filename=config_name, force=force)
+            file_sd_configs = promjob.file_sd_configs
+            if (file_sd_configs and file_sd_configs.files
+                    and file_sd_configs.configs):
+                for filepath in file_sd_configs.files:
+                    _, filename = filepath.rsplit("/", 1)
+
+                    if file_sd_configs.configs.get(filename):
+                        data_dump(
+                            file_sd_configs.configs[filename],
+                            filename,
+                            force=force,
+                        )
+        case "datasource":
+            logger.debug(
+                "%s Deploying datasource '%s' ",
+                MESSAGE_HDR,
+                config_name,
+            )
+            datasource = Datasource(**config)
+            datasource.generate(template_name=config_name)
+            datasource.config_dump(filename=config_name, force=force)
+        case _:
+            logger.warning(
+                "Unknown bind module '%s' for config '%s'",
+                bind_module,
+                config_name,
+            )
+
+
+def deploy_services(service_name: str, configs: dict, force: bool) -> None:
+    """Deploy services."""
+    config_names: set | None = CONFIG_MAPPING.get(service_name)
+    if not config_names:
+        return
+    logger.info("%s Deploying service '%s'  %s", MESSAGE_HDR, service_name,
+                MESSAGE_HDR)
+    for config_name in config_names:
+        deploy_service(config_name, configs, force)
+
+    env_dump(configs, service_name)
+    logger.info("%s Deploying service '%s' done %s", MESSAGE_HDR, service_name,
+                MESSAGE_HDR)

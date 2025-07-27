@@ -3,9 +3,14 @@ scrape_configs:
     metrics_path: /probe
     params:
       module: [http_2xx]  # Look for a HTTP 200 response.
+    {% if file_sd_configs %}
     file_sd_configs:
       - files:
-          - "../blackbox_targets.json"
+        {% for file in file_sd_configs.files  %}
+          - {{ file }}
+        {% endfor %}
+        refresh_interval: {{ file_sd_configs.refresh_interval }}
+    {% endif %}
     relabel_configs:
       - source_labels: [__address__]
         target_label: __param_target
