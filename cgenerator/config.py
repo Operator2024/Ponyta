@@ -228,7 +228,7 @@ default_config: dict = {
         "bind_service": "blackbox_exporter",
         "bind_module": "promjob",
         "static_configs": {
-            "targets": ["192.168.0.5:9115"],
+            "targets": ["172.18.0.5:9115"],
             "labels": {
                 "status": "production",
                 "type": "internal"
