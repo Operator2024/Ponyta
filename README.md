@@ -13,7 +13,7 @@
 ---
 <div align="center">
 
-![Static Badge](https://img.shields.io/badge/version-1.0.0-lightgreen?style=flat)
+![Static Badge](https://img.shields.io/badge/version-1.1.0-lightgreen?style=flat)
 
 </div>
 
@@ -24,12 +24,13 @@
 1. Run cgenerator.py with the required flags.
 
 ```bash
-usage: cgenerator.py [-h] [--force] [--prometheus] [--node-exporter] [--snmp-exporter] [--ping-exporter] [--blackbox-exporter] [--grafana]
+usage: config_generator.py [-h] [-v] [--force] [--prometheus] [--node-exporter] [--snmp-exporter] [--ping-exporter] [--blackbox-exporter] [--grafana]
 
-Config generator for Ponyta services
+Config generator for Ponyta services, version 1.1.0-rc1
 
 options:
   -h, --help            show this help message and exit
+  -v, --verbose
   --force, -f           Force overwrite
   --prometheus, -p      Generate config for prometheus
   --node-exporter, -n   Generate config for node-exporter
@@ -81,7 +82,7 @@ Additionally, there is a file for cloud-init, which allows you to deploy a cloud
 │   └── utils.py
 ├── cgenerator.json
 ├── cgenerator.log
-├── cgenerator.py
+├── config_generator.py
 ├── compose.yml
 ├── grafana
 │   └── datasource.yml
@@ -107,3 +108,5 @@ Additionally, there is a file for cloud-init, which allows you to deploy a cloud
 ├── snmp.yml
 └── user_data.yml
 ```
+
+### 🚨🚨🚨: Documentation in working progress
