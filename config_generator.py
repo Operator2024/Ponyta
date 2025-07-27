@@ -60,8 +60,8 @@ def set_allowed_services(cmd_args: list, config: dict) -> None:
 def main() -> None:
     """Do main work for generating config files."""
     parser = argparse.ArgumentParser(
-        description="Config generator for Ponyta services, version {}".format(
-            __version__),
+        description=
+        f"Config generator for Ponyta services, version {__version__}",
         formatter_class=argparse.RawTextHelpFormatter,
     )
     parser.add_argument("-v", "--verbose", action="store_true", default=False)

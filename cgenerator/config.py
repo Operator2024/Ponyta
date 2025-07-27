@@ -77,14 +77,14 @@ default_config: dict = {
             "$2y$12$TEqV7JcONj2KMwSMczSm0OB1FdSwI/aqhfNWv8n9QbU0SAD6TqEV2",
         },
         "bind_service": "prometheus",
-        "bind_module": "file"
+        "bind_module": "file",
     },
     "secret.txt": {
         "_filepath_": "./prometheus",
         "username": "admin",
         "secret": "defaultpassword",
         "bind_service": ["prometheus", "grafana"],
-        "bind_module": "promjob"
+        "bind_module": "promjob",
     },
     "ping.yml": {
         "_filepath_": "./ping_exporter/",
@@ -119,9 +119,9 @@ default_config: dict = {
             "targets": ["ping_exporter:9427"],
             "labels": {
                 "status": "production",
-                "type": "internal"
-            }
-        }
+                "type": "internal",
+            },
+        },
     },
     "prometheus.yml": {
         "_filepath_": "./prometheus/conf.d/",
@@ -136,11 +136,11 @@ default_config: dict = {
             "targets": ["localhost:9090"],
             "labels": {
                 "status": "production",
-                "type": "internal"
-            }
+                "type": "internal",
+            },
         },
         "bind_service": "prometheus",
-        "bind_module": "promjob"
+        "bind_module": "promjob",
     },
     "node_exporter.yml": {
         "_filepath_": "./prometheus/conf.d/",
@@ -150,9 +150,9 @@ default_config: dict = {
             "targets": ["172.18.0.1:9100"],
             "labels": {
                 "status": "production",
-                "type": "internal"
-            }
-        }
+                "type": "internal",
+            },
+        },
     },
     "snmp_exporter.yml": {
         "_filepath_": "./prometheus/conf.d/",
@@ -162,9 +162,9 @@ default_config: dict = {
             "targets": ["snmp_exporter:9116"],
             "labels": {
                 "status": "production",
-                "type": "internal"
-            }
-        }
+                "type": "internal",
+            },
+        },
     },
     "snmp_extended.yml": {
         "_filepath_": "./prometheus/conf.d/",
@@ -179,25 +179,25 @@ default_config: dict = {
                     "data": [{
                         "labels": {
                             "status": "production",
-                            "type": "external"
+                            "type": "external",
                         },
-                        "targets": []
-                    }]
-                }
-            }
+                        "targets": [],
+                    }],
+                },
+            },
         },
         "bind_service": "snmp_exporter",
-        "bind_module": "promjob"
+        "bind_module": "promjob",
     },
     "snmp_interface.yml": {
         "_filepath_": "./prometheus/conf.d/",
         "scrape_interval": "20s",
         "file_sd_configs": {
             "files": ["../snmp_targets.json"],
-            "refresh_interval": "120s"
+            "refresh_interval": "120s",
         },
         "bind_service": "snmp_exporter",
-        "bind_module": "promjob"
+        "bind_module": "promjob",
     },
     "blackbox_exporter.yml": {
         "_filepath_": "./prometheus/conf.d/",
@@ -214,14 +214,14 @@ default_config: dict = {
                         "labels": {
                             "job": "blackbox",
                             "status": "production",
-                            "type": "external"
+                            "type": "external",
                         },
                         "targets":
-                        ["http://prometheus.io", "https://prometheus.io"]
-                    }]
-                }
-            }
-        }
+                        ["http://prometheus.io", "https://prometheus.io"],
+                    }],
+                },
+            },
+        },
     },
     "blackbox.yml": {
         "_filepath_": "./prometheus/conf.d/",
@@ -231,9 +231,9 @@ default_config: dict = {
             "targets": ["172.18.0.5:9115"],
             "labels": {
                 "status": "production",
-                "type": "internal"
-            }
-        }
+                "type": "internal",
+            },
+        },
     },
     "grafana.yml": {
         "_filepath_": "./prometheus/conf.d/",
@@ -247,17 +247,17 @@ default_config: dict = {
             "targets": ["grafana:3000"],
             "labels": {
                 "status": "production",
-                "type": "internal"
-            }
+                "type": "internal",
+            },
         },
         "bind_service": "grafana",
-        "bind_module": "promjob"
+        "bind_module": "promjob",
     },
     "datasource.yml": {
         "_filepath_": "./grafana/",
         "scheme": "http",
         "bind_service": "grafana",
-        "bind_module": "datasource"
+        "bind_module": "datasource",
     },
 }
 

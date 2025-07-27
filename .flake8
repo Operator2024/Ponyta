@@ -11,5 +11,5 @@ inline-quotes = double
 per-file-ignores =
   __init__.py:D104
   config.py:E501
-  utils.py:PLE101,PLR901,W503
+  utils.py:PLE101,PLR901,W503,PLW613,PLW113
   prometheus.py:PLE101
