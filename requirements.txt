@@ -32,3 +32,4 @@ flake8-class-attributes-order
 pep8-naming
 pylint-pydantic
 yapf
+pytoml
