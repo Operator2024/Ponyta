@@ -7,7 +7,9 @@ scrape_configs:
       password_file: /etc/prometheus/secret.txt
 
     static_configs:
-      - targets: ['grafana:3000']
+      - targets:
+          - grafana:3000
         labels:
-          status: "production"
-          type: "internal"
+          status: production
+          type: internal
+

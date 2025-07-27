@@ -8,7 +8,8 @@ scrape_configs:
       password_file: /etc/prometheus/secret.txt
 
     static_configs:
-      - targets: ["localhost:9090"]
+      - targets:
+          - localhost:9090
         labels:
-          status: "production"
-          type: "internal"
+          status: production
+          type: internal
