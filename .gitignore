@@ -1,3 +1,4 @@
 snmp_.*
 user_data_.*
 private/
+.vscode
