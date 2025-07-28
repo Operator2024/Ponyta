@@ -113,6 +113,9 @@ packages:
   - neofetch
   - ifupdown
   - python3-pip
+  - python3-pip-whl
+  - python3-setuptools-whl
+  - python3-venv
   - git
   - net-tools
   - sshuttle
