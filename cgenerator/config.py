@@ -1,6 +1,7 @@
 """The module contains configuration data."""
 import logging
 import os
+from pathlib import Path
 
 logging_config: dict = {
     "version": 1,
@@ -261,9 +262,12 @@ default_config: dict = {
     },
 }
 
+COMPOSE: Path = Path("compose.yml")
+CONFIG: Path = Path("cgenerator.json")
 WEB_CONFIG_FILE = os.environ.get("WEB_CONFIG_FILE", "web.yml")
 ENV_FILE = os.environ.get("ENV_FILE", ".env")
 DOCKER_ENV: dict = {}
+COMPOSE_CMD: str = "docker-compose up -d "
 
 CONFIG_MAPPING: dict[str, set] = {
     "prometheus": set(),

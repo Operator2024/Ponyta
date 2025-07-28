@@ -7,11 +7,13 @@ import argparse
 import logging
 import logging.config
 import sys
-from pathlib import Path
 
 import yaml
 
 from cgenerator.config import (
+    COMPOSE,
+    COMPOSE_CMD,
+    CONFIG,
     CONFIG_MAPPING,
     default_config,
     logger,
@@ -24,9 +26,6 @@ from cgenerator.utils import (
 )
 
 ALLOWED_SERVICES: set[str] = set()
-COMPOSE_CMD: str = "docker-compose up -d "
-COMPOSE: Path = Path("compose.yml")
-CONFIG: Path = Path("cgenerator.json")
 
 
 def load_config() -> dict:
@@ -54,7 +53,7 @@ def set_allowed_services(cmd_args: list, config: dict) -> None:
             if bind_service in cmd_args and bind_service in compose["services"]:
                 ALLOWED_SERVICES.add(bind_service)
                 CONFIG_MAPPING[bind_service].add(filename)
-        COMPOSE_CMD += ",".join(ALLOWED_SERVICES)
+        COMPOSE_CMD += " ".join(ALLOWED_SERVICES)
 
 
 def main() -> None:
