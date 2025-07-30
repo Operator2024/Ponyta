@@ -21,7 +21,7 @@
 
 1. Fill in cgenerator.json. The repository contains a default configuration for cgenerator.json. This configuration allows you to generate configs for all exporters with http protocol and authorization.
 1. Install python3 dependencies from requirements.txt file
-1. Run cgenerator.py with the required flags.
+1. Run config_generator.py with the required flags.
 
 ```bash
 usage: config_generator.py [-h] [-v] [--force] [--prometheus] [--node-exporter] [--snmp-exporter] [--ping-exporter] [--blackbox-exporter] [--grafana]
@@ -110,3 +110,26 @@ Additionally, there is a file for cloud-init, which allows you to deploy a cloud
 ```
 
 ### 🚨🚨🚨: Documentation in working progress
+
+### File cgenerator.json
+
+[**cgenerator.json**](cgenerator.json) - is used to transfer data from the user to the generation script, with subsequent overwriting of the default data with the user's data.
+You can override both individual fields in the config and the entire config as a whole.
+In order to override for existing configs:
+
+* From the file [defaultconfig.md](defaultconfig.md) take the necessary part of the configuration or fill in the file cgenerator.json using the example (keeping the nesting)
+* Replace the values of the required parameters
+* Run the config_generator.py script with the required flags.
+* Check generated configs
+* Using the command that the script issued at the end, run the docker compose services
+
+🚨 The **bind_service** parameter in the config tells the script to relate to a specific service.
+🚨 The **bind_module** parameter allows the script to understand which module to use to process the data.
+
+🚨🚨🚨 **When redefining existing configurations, the parameters above can be omitted, as they are already present in the default configuration.** 🚨🚨🚨
+
+There are currently 3 values for the **bind_module** parameter
+
+1. **promjob** - Prometheus job
+2. **datasource** - Grafana datasource
+3. **file** - Simple file, example data for ping_exporter - ping.yml, or any data.
