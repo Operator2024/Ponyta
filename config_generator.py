@@ -1,9 +1,10 @@
 #!/usr/bin/env python3
 """Cgenerator main module."""
 
-__version__ = "1.1.0-rc1"
+__version__ = "1.1.1-rc1"
 
 import argparse
+import json
 import logging
 import logging.config
 import sys
@@ -63,6 +64,10 @@ def main() -> None:
         f"Config generator for Ponyta services, version {__version__}",
         formatter_class=argparse.RawTextHelpFormatter,
     )
+    parser.add_argument("--export_default_config",
+                        "-export",
+                        action="store_true",
+                        default=False)
     parser.add_argument("-v", "--verbose", action="store_true", default=False)
     parser.add_argument("--force",
                         "-f",
@@ -114,10 +119,15 @@ def main() -> None:
 
     services: list = [
         name for name, value in vars(args).items()
-        if value and name != "verbose"
+        if value and name not in ["verbose"]
     ]
     if not services:
         parser.print_help()
+        sys.exit(0)
+    if args.export_default_config:
+        with open("default_config.json", "w", encoding="utf-8") as f:
+            json.dump(default_config, f, indent=4)
+        logger.info("Default config exported to default_config.json. Bye!")
         sys.exit(0)
     configs = load_config()
     set_allowed_services(
