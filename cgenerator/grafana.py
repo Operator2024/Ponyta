@@ -17,16 +17,24 @@ class Datasource(BaseModel):
         use_enum_values=True,
     )
 
-    scheme: str = Field(description="Scheme", default="http")
+    name: str = Field(description="Name for datasource", default="Prometheus")
+    url: str = Field(description="URL without scheme")
+    scheme: str = Field(description="Scheme: http or https", default="http")
+    basic_auth_user: str | None = Field(description="Basic auth username",
+                                        min_length=5,
+                                        default=None)
+    basic_auth_password: str | None = Field(description="Basic auth password",
+                                            default=None)
+    server_name: str | None = Field(
+        description="Server name in specify the certificate", default=None)
 
+    template_name: str = Field(alias="_template_name_", default="datasource")
     filepath: str = Field(alias="_filepath_")
     _service_cfg: str = PrivateAttr()
 
-    def generate(self, template_name: str) -> None:
+    def generate(self) -> None:
         """Generate config files for prometheus."""
-        if template_name.find("."):
-            template_name = template_name.split(".")[0]
-        self.__generate_from_template(template_name)
+        self.__generate_from_template(self.template_name)
 
     def config_dump(self, filename: str, force: bool) -> None:
         """Dump jinja generated config to file."""

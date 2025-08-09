@@ -94,9 +94,11 @@ def prepare_config(default_config: dict, override_config: dict) -> dict:
     bind_module_field: str = "bind_module"
 
     config: dict = copy.deepcopy(default_config)
-    for key, value in default_config.items():
-        if key in override_config:
-            config[key] = merge(value, override_config[key])
+    for key, value in override_config.items():
+        if key in default_config:
+            config[key] = merge(default_config[key], value)
+        else:
+            config[key] = value
 
         if bind_service_field not in config[
                 key] and bind_module_field not in config[key] and key != ".env":
@@ -185,7 +187,7 @@ def deploy_service(
                 config_name,
             )
             datasource = Datasource(**config)
-            datasource.generate(template_name=config_name)
+            datasource.generate()
             datasource.config_dump(filename=config_name, force=force)
         case _:
             logger.warning(
