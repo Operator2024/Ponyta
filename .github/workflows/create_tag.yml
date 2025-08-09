@@ -3,7 +3,6 @@ on:
   push:
     branches:
       - master
-      - dev
 jobs:
   build:
     runs-on: ubuntu-latest
@@ -18,12 +17,11 @@ jobs:
         uses: mathieudutour/github-tag-action@v6.2
         with:
           github_token: ${{ secrets.GITHUB_TOKEN }}
-          # custom_tag: ${{ env.CG_VERSION_CLEAR }}
+          custom_tag: ${{ env.CG_VERSION_CLEAR }}
           tag_prefix: ""
-          default_bump: false
           fetch_all_tags: true
           create_annotated_tag: true
-          dry_run: true
+          dry_run: false
       - name: Display tag information
         run: |
           echo "Tag created: ${{ steps.tag_version.outputs.new_tag }}"
