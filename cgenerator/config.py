@@ -260,6 +260,7 @@ default_config: dict = {
     "datasource.yml": {
         "_filepath_": "./grafana/",
         "scheme": "http",
+        "url": "http://prometheus:9090",
         "bind_service": "grafana",
         "bind_module": "datasource",
     },

@@ -3,7 +3,7 @@
 Конфигурация из данного файла может быть использована для файла cgenerator.json
 
 ```json
- {
+{
     ".env": {
         "_filepath_": "./",
         "prometheus": {
@@ -219,6 +219,7 @@
     "datasource.yml": {
         "_filepath_": "./grafana/",
         "scheme": "http",
+        "url": "http://prometheus:9090",
         "bind_service": "grafana",
         "bind_module": "datasource",
     },
