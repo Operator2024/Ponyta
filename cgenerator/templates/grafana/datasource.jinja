@@ -6,7 +6,7 @@ datasources:
   {% endif %}
     type: prometheus
     {% if url != "" %}
-    url: {{ scheme }}://{{ url }}
+    url: {{ url }}
     {% else %}
     url: http://prometheus:$PROM_PORT
     {% endif %}

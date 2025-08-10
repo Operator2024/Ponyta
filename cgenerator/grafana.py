@@ -18,7 +18,7 @@ class Datasource(BaseModel):
     )
 
     name: str = Field(description="Name for datasource", default="Prometheus")
-    url: str = Field(description="URL without scheme")
+    url: str = Field(description="Full URL for datasource")
     scheme: str = Field(description="Scheme: http or https", default="http")
     basic_auth_user: str | None = Field(description="Basic auth username",
                                         min_length=5,
