@@ -10,7 +10,11 @@ datasources:
     {% else %}
     url: http://prometheus:$PROM_PORT
     {% endif %}
+    {% if is_default %}
     isDefault: true
+    {% else %}
+    isDefault: false
+    {% endif %}
     access: proxy
     editable: true
     # uncomment if prom has basicAuth ans set password

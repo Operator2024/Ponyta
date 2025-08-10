@@ -27,6 +27,7 @@ class Datasource(BaseModel):
                                             default=None)
     server_name: str | None = Field(
         description="Server name in specify the certificate", default=None)
+    is_default: bool = Field(description="Is default datasource", default=True)
 
     template_name: str = Field(alias="_template_name_", default="datasource")
     filepath: str = Field(alias="_filepath_")
