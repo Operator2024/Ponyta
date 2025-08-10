@@ -50,18 +50,23 @@ def set_allowed_services(cmd_args: list, config: dict) -> None:
         with COMPOSE.open("r", encoding="utf-8") as f:
             compose = yaml.safe_load(f)
         for filename, data in config.items():
-            bind_service: str = data.get("bind_service", "")
-            if bind_service in cmd_args and bind_service in compose["services"]:
-                ALLOWED_SERVICES.add(bind_service)
-                CONFIG_MAPPING[bind_service].add(filename)
+            bind_services: list = [data["bind_service"]] if isinstance(
+                data.get("bind_service"), str) else data.get(
+                    "bind_service", [])
+
+            for bind_service in bind_services:
+                if bind_service in cmd_args and bind_service in compose[
+                        "services"]:
+                    ALLOWED_SERVICES.add(bind_service)
+                    CONFIG_MAPPING[bind_service].add(filename)
         COMPOSE_CMD += " ".join(ALLOWED_SERVICES)
 
 
 def main() -> None:
     """Do main work for generating config files."""
     parser = argparse.ArgumentParser(
-        description=
-        f"Config generator for Ponyta services, version {__version__}",
+        description="Config generator for Ponyta services,"
+        f" version {__version__}",
         formatter_class=argparse.RawTextHelpFormatter,
     )
     parser.add_argument("--export_default_config",
@@ -114,6 +119,8 @@ def main() -> None:
 
     if args.verbose:
         logging_config["loggers"]["root"]["level"] = "DEBUG"
+        logging_config["handlers"]["console"][
+            "formatter"] = "verbose"
     logging.config.dictConfig(logging_config)
     logger.info("Starting config generator")
 

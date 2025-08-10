@@ -13,7 +13,7 @@
 ---
 <div align="center">
 
-![Static Badge](https://img.shields.io/badge/version-1.1.0-lightgreen?style=flat)
+![Static Badge](https://img.shields.io/badge/version-1.1.1-lightgreen?style=flat)
 
 </div>
 
@@ -24,12 +24,13 @@
 1. Run config_generator.py with the required flags.
 
 ```bash
-usage: config_generator.py [-h] [-v] [--force] [--prometheus] [--node-exporter] [--snmp-exporter] [--ping-exporter] [--blackbox-exporter] [--grafana]
+usage: config_generator.py [-h] [--export_default_config] [-v] [--force] [--prometheus] [--node-exporter] [--snmp-exporter] [--ping-exporter] [--blackbox-exporter] [--grafana]
 
-Config generator for Ponyta services, version 1.1.0-rc1
+Config generator for Ponyta services, version 1.1.1-rc1
 
 options:
   -h, --help            show this help message and exit
+  --export_default_config, -export
   -v, --verbose
   --force, -f           Force overwrite
   --prometheus, -p      Generate config for prometheus
@@ -57,7 +58,7 @@ Additionally, there is a file for cloud-init, which allows you to deploy a cloud
 * пароль - **defaultpass**,
 * порт - **2222**
 
-### Project hierarchy
+### Project hierarchy (for default config)
 
 ```bash
 ├── blackbox_exporter
@@ -90,21 +91,15 @@ Additionally, there is a file for cloud-init, which allows you to deploy a cloud
 ├── ping_exporter
 │   └── ping.yml
 ├── prometheus
-│   ├── blackbox_targets.json
 │   ├── conf.d
-│   │   ├── blackbox_exporter.yml
-│   │   ├── blackbox.yml
-│   │   ├── node_exporter.yml
-│   │   ├── ping_exporter.yml
 │   │   └── prometheus.yml
 │   ├── first.rules
 │   ├── prometheus.yml
 │   ├── secret.txt
-│   ├── snmp_targets.json
-│   ├── targets.json
-│   └── web.yml
+│   └── targets.json
 ├── README.md
 ├── requirements.txt
+├── requirements-dev.txt
 ├── snmp.yml
 └── user_data.yml
 ```
@@ -133,3 +128,5 @@ There are currently 3 values for the **bind_module** parameter
 1. **promjob** - Prometheus job
 2. **datasource** - Grafana datasource
 3. **file** - Simple file, example data for ping_exporter - ping.yml, or any data.
+
+Three extension types are supported for '**file**' - yml, json, txt
