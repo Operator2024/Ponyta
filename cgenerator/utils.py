@@ -56,11 +56,16 @@ def env_dump(config: dict[str, dict], service: str) -> None:
 def data_dump(config: dict, filename: str, force: bool) -> None:
     """Save data to file."""
     file_ext = filename.split(".")[-1]
-    data: dict = config
-    if not data:
-        logger.debug(
-            "Data for '%s' not found! "
-            "Generating skipping ",
+    data: dict = copy.deepcopy(config)
+    if not data or data.get("data") is None:
+        logger.warning(
+            "Fileobject is empty or key 'data' not found! File '%s' skipped.",
+            filename)
+        return
+    if file_ext not in ["yml", "json", "txt"]:
+        logger.warning(
+            "Unsupported file extension '%s'! File '%s' skipped.",
+            file_ext,
             filename,
         )
         return
@@ -75,14 +80,16 @@ def data_dump(config: dict, filename: str, force: bool) -> None:
         with dst_path.open("w", encoding="utf-8") as f:
             if file_ext == "yml":
                 yml_dump(
-                    data,
+                    data["data"],
                     f,
                     indent=2,
                     default_flow_style=False,
                     Dumper=IndentDumper,
                 )
-            else:
+            elif file_ext == "json":
                 json.dump(data.get("data", {}), f, indent=4)
+            else:
+                f.write(data["data"])
         logger.info("Data for '%s' written to '%s'", filename, dst_path)
         return
     logger.debug("File '%s' already exists", dst_path)
@@ -202,11 +209,11 @@ def deploy_services(service_name: str, configs: dict, force: bool) -> None:
     config_names: set | None = CONFIG_MAPPING.get(service_name)
     if not config_names:
         return
-    logger.info("%s Deploying service '%s'  %s", MESSAGE_HDR, service_name,
+    logger.info("%s Begin deploy service '%s'  %s", MESSAGE_HDR, service_name,
                 MESSAGE_HDR)
     for config_name in config_names:
         deploy_service(config_name, configs, force)
 
     env_dump(configs, service_name)
-    logger.info("%s Deploying service '%s' done %s", MESSAGE_HDR, service_name,
+    logger.info("%s Deploy service '%s' done %s", MESSAGE_HDR, service_name,
                 MESSAGE_HDR)

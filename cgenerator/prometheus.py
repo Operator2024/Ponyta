@@ -42,26 +42,6 @@ class BasicAuth(BaseModel):
         default=None,
     )
 
-    def secret_dump(self, config: dict, filename: str, force: bool) -> None:
-        """Dump secret to file."""
-        if not self.password_file:
-            return
-
-        password_file = config.get(filename, {})
-        if not password_file:
-            logger.warning(
-                "Data for %s not found! Generating skipping ",
-                filename,
-            )
-            return
-        dst_path: Path = Path(password_file.get("_filepath_"), filename)
-        if not dst_path.is_file() or force:
-            with dst_path.open("w", encoding="utf-8") as f:
-                f.write(password_file["secret"])
-            logger.info("Data for %s written to %s", filename, dst_path)
-            return
-        logger.info("File %s already exists", dst_path)
-
 
 class Job(BaseModel):
     """Prometheus class for generating job files."""
@@ -89,21 +69,6 @@ class Job(BaseModel):
 
     filepath: str = Field(alias="_filepath_")
     _service_cfg: str = PrivateAttr()
-
-    def secret_dump(self, config: dict, force: bool) -> None:
-        """Dump secret to file."""
-        if not isinstance(self.basic_auth, BasicAuth):
-            logger.warning("No basic auth configured")
-            return
-        password_file = self.basic_auth.password_file
-        if password_file is not None:
-
-            logger.info("Password file is set - %s", password_file)
-            filename = password_file.split("/")[-1]
-
-            self.basic_auth.secret_dump(config=config,
-                                        filename=filename,
-                                        force=force)
 
     def generate(self, template_name: str) -> None:
         """Generate config files for prometheus."""
