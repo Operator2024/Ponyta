@@ -32,41 +32,44 @@
     },
     "web.yml": {
         "_filepath_": "./prometheus",
-        "basic_auth_users": {
-            "admin":
-            "$2y$12$TEqV7JcONj2KMwSMczSm0OB1FdSwI/aqhfNWv8n9QbU0SAD6TqEV2",
+        "data": {
+            "basic_auth_users": {
+                "admin":
+                "$2y$12$TEqV7JcONj2KMwSMczSm0OB1FdSwI/aqhfNWv8n9QbU0SAD6TqEV2",
+            },
         },
         "bind_service": "prometheus",
         "bind_module": "file",
     },
     "secret.txt": {
         "_filepath_": "./prometheus",
-        "username": "admin",
-        "secret": "defaultpassword",
+        "data": "defaultpassword",
         "bind_service": ["prometheus", "grafana"],
-        "bind_module": "promjob",
+        "bind_module": "file",
     },
     "ping.yml": {
         "_filepath_": "./ping_exporter/",
-        "targets": [
-            "8.8.8.8",
-            "8.8.4.4",
-            "google.com",
-            "vk.com",
-            "selectel.ru",
-        ],
-        "dns": {
-            "nameserver": "9.9.9.9",
-            "refresh": "30s",
-        },
-        "ping": {
-            "interval": "2s",
-            "timeout": "5s",
-            "history-size": 42,
-            "payload-size": 120,
-        },
-        "options": {
-            "disableIPv6": True,
+        "data": {
+            "targets": [
+                "8.8.8.8",
+                "8.8.4.4",
+                "google.com",
+                "vk.com",
+                "selectel.ru",
+            ],
+            "dns": {
+                "nameserver": "9.9.9.9",
+                "refresh": "30s",
+            },
+            "ping": {
+                "interval": "2s",
+                "timeout": "5s",
+                "history-size": 42,
+                "payload-size": 120,
+            },
+            "options": {
+                "disableIPv6": True,
+            },
         },
         "bind_service": "ping_exporter",
         "bind_module": "file",
