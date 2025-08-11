@@ -6,29 +6,3 @@ pydantic_core==2.33.2
 PyYAML==6.0.2
 typing-inspection==0.4.1
 typing_extensions==4.14.0
-# LINTERS
-darglint2
-flake8
-flake8-bandit
-flake8-bugbear
-flake8-builtins
-flake8-comprehensions
-flake8-docstrings
-flake8-eradicate
-flake8-isort
-flake8-pytest-style
-flake8-spellcheck
-flake8-pylint
-flake8-absolute-import
-flake8-commas
-flake8-print
-flake8-printf-formatting
-flake8-pytest
-flake8-variables-names
-flake8-quotes
-flake8-tidy-imports
-flake8-class-attributes-order
-# flakehell
-pep8-naming
-pylint-pydantic
-yapf

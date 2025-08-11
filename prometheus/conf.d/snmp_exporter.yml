@@ -1,8 +1,0 @@
-scrape_configs:
-  # Global exporter-level metrics
-  - job_name: "snmp_exporter"
-    static_configs:
-      - targets: ["snmp_exporter:9116"]
-        labels:
-          status: "production"
-          type: "internal"

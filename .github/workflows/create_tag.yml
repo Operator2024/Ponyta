@@ -1,0 +1,29 @@
+name: Bump version
+on:
+  push:
+    branches:
+      - master
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Get version from config generator
+        run: |
+          export CG_VERSION=$(cat config_generator.py | grep version | grep -Eo "[[:digit:]]+\.[[:digit:]]+\.[[:digit:]]+\-\w\w[0-9]+")
+          echo "CG_VERSION_CLEAR=${CG_VERSION//-rc[[:digit:]]*/}" >> $GITHUB_ENV
+      - name: Bump version and push tag
+        id: tag_version
+        uses: mathieudutour/github-tag-action@v6.2
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          custom_tag: ${{ env.CG_VERSION_CLEAR }}
+          tag_prefix: ""
+          fetch_all_tags: true
+          create_annotated_tag: true
+          dry_run: false
+      - name: Display tag information
+        run: |
+          echo "Tag created: ${{ steps.tag_version.outputs.new_tag }}"
+          echo "Release type: ${{ steps.tag_version.outputs.release_type }}"
+          echo "Changelog: ${{ steps.tag_version.outputs.changelog  }}"

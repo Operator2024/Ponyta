@@ -1,7 +1,13 @@
 scrape_configs:
   - job_name: "node"
+    {% if static_configs %}
     static_configs:
-      - targets: ["172.18.0.1:9100"]
+      - targets:
+        {% for target in static_configs.targets  %}
+          - {{ target }}
+        {% endfor %}
         labels:
-          status: "production"
-          type: "internal"{{'\n'}}
+        {% for label in static_configs.labels  %}
+          {{ label }}: {{ static_configs.labels[label] }}
+        {% endfor %}
+    {% endif %}

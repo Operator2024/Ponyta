@@ -1,8 +1,14 @@
 scrape_configs:
   # Global exporter-level metrics
   - job_name: "snmp_exporter"
+    {% if static_configs %}
     static_configs:
-      - targets: ["snmp_exporter:9116"]
+      - targets:
+        {% for target in static_configs.targets  %}
+          - {{ target }}
+        {% endfor %}
         labels:
-          status: "production"
-          type: "internal"{{'\n'}}
+        {% for label in static_configs.labels  %}
+          {{ label }}: {{ static_configs.labels[label] }}
+        {% endfor %}
+    {% endif %}

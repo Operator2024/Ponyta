@@ -1,50 +1,9 @@
-"""The module contains configuration data."""
-import logging
-import os
-from pathlib import Path
+## Default config
 
-logging_config: dict = {
-    "version": 1,
-    "disable_existing_loggers": False,
-    "formatters": {
-        "simple": {
-            "datefmt": "[%d/%b/%Y %H:%M:%S %z]",
-            "format": "%(asctime)s - %(message)s",
-        },
-        "verbose": {
-            "datefmt":
-            "[%d/%b/%Y %H:%M:%S %z]",
-            "format":
-            "%(asctime)s - %(name)s - %(levelname)s - %(funcName)s:%(lineno)d - %(message)s",
-        },
-    },
-    "handlers": {
-        "console": {
-            "class": "logging.StreamHandler",
-            "level": "NOTSET",
-            "formatter": "simple",
-            "stream": "ext://sys.stdout",
-        },
-        "file": {
-            "class": "logging.handlers.TimedRotatingFileHandler",
-            "level": "NOTSET",
-            "formatter": "verbose",
-            "when": "D",
-            "backupCount": 0,
-            "filename": "cgenerator.log",
-        },
-    },
-    "loggers": {
-        "root": {
-            "level": "INFO",
-            "handlers": ["console"],
-        },
-    },
-}
+Конфигурация из данного файла может быть использована для файла cgenerator.json
 
-logger: logging.Logger = logging.getLogger()
-
-default_config: dict = {
+```json
+{
     ".env": {
         "_filepath_": "./",
         "prometheus": {
@@ -265,20 +224,4 @@ default_config: dict = {
         "bind_module": "datasource",
     },
 }
-
-COMPOSE: Path = Path("compose.yml")
-CONFIG: Path = Path("cgenerator.json")
-WEB_CONFIG_FILE = os.environ.get("WEB_CONFIG_FILE", "web.yml")
-ENV_FILE = os.environ.get("ENV_FILE", ".env")
-DOCKER_ENV: dict = {}
-COMPOSE_CMD: str = "docker-compose up -d "
-
-CONFIG_MAPPING: dict[str, set] = {
-    "prometheus": set(),
-    "node_exporter": set(),
-    "snmp_exporter": set(),
-    "ping_exporter": set(),
-    "blackbox_exporter": set(),
-    "grafana": set(),
-}
-MESSAGE_HDR: str = "===" * 3
+```

@@ -1,9 +1,13 @@
 scrape_configs:
   - job_name: "snmp_interface"
+    {% if file_sd_configs %}
     file_sd_configs:
       - files:
-          - "../snmp_targets.json"
-        refresh_interval: 120s
+        {% for file in file_sd_configs.files  %}
+          - {{ file }}
+        {% endfor %}
+        refresh_interval: {{ file_sd_configs.refresh_interval }}
+    {% endif %}
     {% if scrape_interval  %}
     scrape_interval: {{ scrape_interval }}
     {% endif %}
