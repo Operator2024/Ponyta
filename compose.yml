@@ -67,7 +67,7 @@ services:
     image: grafana/grafana:11.4.0
     container_name: grafana
     ports:
-      - ${GF_EXTRNAL_PORT}:3000/tcp
+      - ${GF_EXTERNAL_PORT}:3000/tcp
     restart: unless-stopped
     environment:
       - GF_SECURITY_ADMIN_USER=${GF_SECURITY_ADMIN_USER}

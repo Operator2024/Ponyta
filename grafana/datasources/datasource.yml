@@ -11,7 +11,7 @@ datasources:
     basicAuth: true
     basicAuthUser: admin
     secureJsonData:
-      basicAuthPassword: admin
+      basicAuthPassword: defaultpassword
     jsonData:
       prometheusType: Prometheus
       prometheusVersion: "2.50.1"
