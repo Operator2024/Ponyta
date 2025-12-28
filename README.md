@@ -19,9 +19,17 @@
 
 ### How it work
 
+> Ansible guide for deploying Ponyta, also known as [Ponyta-tools](https://github.com/Operator2024/ponyta_tools)
+
+More details can be found in the README file in the repository.
+
+### ⚠️cgenerator is deprecated and will be removed later
+
+### Deprecated information
+
 1. Fill in cgenerator.json. The repository contains a default configuration for cgenerator.json. This configuration allows you to generate configs for all exporters with http protocol and authorization.
-1. Install python3 dependencies from requirements.txt file
-1. Run config_generator.py with the required flags.
+2. Install python3 dependencies from requirements.txt file
+3. Run config_generator.py with the required flags.
 
 ```bash
 usage: config_generator.py [-h] [--export_default_config] [-v] [--force] [--prometheus] [--node-exporter] [--snmp-exporter] [--ping-exporter] [--blackbox-exporter] [--grafana]

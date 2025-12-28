@@ -1,0 +1,5 @@
+# Prometheus Web Configuration
+# Basic Authentication with bcrypt hashes
+
+basic_auth_users:
+  admin: $2y$12$e/TqoKGiS4acVRzbKbxnDe5.z.ChY2/iFv5N0EUJcER2MYhXZaH86
